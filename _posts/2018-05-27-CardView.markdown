@@ -1,0 +1,170 @@
+---
+layout: post
+title: [Android-Meterial Design]1. CardView
+date: 2018-05-27 22:00:00 +0900
+description: How to make CardView # Add post description (optional)
+img: cardview.png# Add image post (optional)
+tags: [Android, View, Meterial Design] # add tag
+---
+Google에서 나온 Meterial Design이 굉장히 마음에 들어서 앞으로 View를 사용하기 위해 정리하면서 어플리케이션을 제작하고자 한다. 한 프로젝트에 모든 디자인을 담아보고 싶은데 될지는 잘 모르겠다. 최대한 분류해 보고자 한다.
+그 첫번째로 제일 만들어보고 싶었던 CardView를 제작해 보고자 한다.
+
+## CardView 작동 원리
+CardView는 support.v7.widget에 포함된 라이브러리이다. 리스트를 사용할 때 아이템들을 카드 형식으로 활용한다.
+CardView는 FrameLayout 클래스의 확장 형태로 둥근 모서리, 배경, 그림자가 추가된 레이아웃이다.
+일반적으로 Cardview는 리스트 형태로 View에 대해 재사용이 가능한 RecyclerView에 사용된다.
+RecyclerView => CardView => RelativeLayout => TextView, ImageView
+
+## 구현 - Gradle
+CardView를 활용하려면 implementation을 수행해야 한다.
+{% highlight gradle%}
+app.gradle
+ implementation 'com.android.support:recyclerview-v7:27.1.1'
+{% endhighlight %}
+
+## 구현 - Item.java
+viewholder를 활용하기 위해서는 Item을 설정해 주어야 한다.
+카드 하나에 필요한 image, Title, 등등의 부분들을 적어준다.
+
+## 구현 - RecyclerAdapter.java
+
+{% highlight java%}
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>  {
+
+Context context;
+List<Item> items;
+int item_layout;
+
+public RecyclerAdapter(Context context, List<Item> items, int item_layout)  {
+this.context = context;
+this.items = items;
+this.item_layout = item_layout;
+}
+
+
+@Override
+public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview, null);
+return new ViewHolder(view);
+}
+
+@Override
+public void onBindViewHolder(ViewHolder holder, int position) {
+final Item item = items.get(position);
+Drawable drawable = ContextCompat.getDrawable(context, item.getImage());
+holder.image.setBackground(drawable);
+holder.title.setText(item.getTitle());
+holder.cardView.setOnClickListener(new View.OnClickListener() {
+
+@Override
+public void onClick(View v) {
+Toast.makeText(context, item.getTitle(), Toast.LENGTH_LONG).show();
+}
+});
+}
+
+@Override
+public int getItemCount() {
+return this.items.size();
+}
+
+public class ViewHolder extends RecyclerView.ViewHolder  {
+ImageView image;
+TextView title;
+CardView cardView;
+
+public ViewHolder(View itemView)  {
+super(itemView);
+image = (ImageView) itemView.findViewById(R.id.image);
+title = (TextView) itemView.findViewById(R.id.title);
+cardView = (CardView) itemView.findViewById(R.id.cardview);
+}
+}
+
+}
+{% endhighlight %}
+
+## 구현 - MainActivity.java
+{% highlight java%}
+public class CardViewActivity extends AppCompatActivity {
+
+final int ITEM_SIZE = 5;
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_card_view);
+
+RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+recyclerView.setHasFixedSize(true);
+recyclerView.setLayoutManager(layoutManager);
+
+List<Item> items = new ArrayList<>();
+Item[] item = new Item[ITEM_SIZE];
+item[0] = new Item(R.drawable.a, "test#1");
+item[1] = new Item(R.drawable.b, "test#2");
+item[2] = new Item(R.drawable.c, "test#3");
+item[3] = new Item(R.drawable.d, "test#4");
+item[4] = new Item(R.drawable.e, "test#5");
+
+for(int i = 0; i< ITEM_SIZE; i++)  {
+items.add(item[i]);
+}
+
+recyclerView.setAdapter(new RecyclerAdapter(getApplicationContext(), items, R.layout.activity_card_view));
+}
+}
+{% endhighlight %}
+
+## 구현 - item_cardview.xml
+{% highlight xml %}
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
+
+<android.support.v7.widget.CardView <!--CardView 작성 : 안에 들어갈 내용 작성-->
+android:id="@+id/cardview"
+android:layout_height="wrap_content"
+android:layout_width="match_parent"
+android:layout_margin="5dp"
+card_view:cardCornerRadius="5dp">
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
+
+<ImageView
+android:id="@+id/image"
+android:layout_width="match_parent"
+android:layout_height="210dp" />
+
+<TextView
+android:id="@+id/title"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:padding="10dp"
+android:text="test" />
+</LinearLayout>
+</android.support.v7.widget.CardView>
+
+</LinearLayout>
+{%endhighlight %}
+
+## 구현 - activity_main.xml
+{% highlight xml %}
+<RelativeLayout 
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".CardView.CardViewActivity">
+
+<android.support.v7.widget.RecyclerView <!-- RecyclerView로 작성-->
+android:id="@+id/recyclerview"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+</android.support.v7.widget.RecyclerView>
+</RelativeLayout>
+{% endhighlight %}
