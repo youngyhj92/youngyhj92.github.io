@@ -1,6 +1,6 @@
 ---
 layout: post
-title: [Android-Meterial Design]1. CardView
+title: (Android-Meterial Design)1. CardView
 date: 2018-05-27 22:00:00 +0900
 description: How to make CardView # Add post description (optional)
 img: cardview.png# Add image post (optional)
@@ -125,7 +125,8 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical">
 
-<android.support.v7.widget.CardView <!--CardView 작성 : 안에 들어갈 내용 작성-->
+<!--CardView 작성 : 안에 들어갈 내용 작성-->
+<android.support.v7.widget.CardView 
 android:id="@+id/cardview"
 android:layout_height="wrap_content"
 android:layout_width="match_parent"
@@ -160,7 +161,8 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".CardView.CardViewActivity">
 
-<android.support.v7.widget.RecyclerView <!-- RecyclerView로 작성-->
+<!-- RecyclerView로 작성-->
+<android.support.v7.widget.RecyclerView 
 android:id="@+id/recyclerview"
 android:layout_width="match_parent"
 android:layout_height="match_parent">
