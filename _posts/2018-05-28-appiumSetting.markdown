@@ -4,7 +4,7 @@ title: Appium Setting
 date: 2018-05-28 13:00:00 +0900
 description: This is How to setup the github blog page # Add post description (optional)
 img: # Add image post (optional)
-tags: [Tools, Software, GithubPage] # add tag
+tags: [Tools, Software, Testing] # add tag
 ---
 
 ##Appium  설치
